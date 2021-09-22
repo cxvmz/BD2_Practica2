@@ -27,8 +27,8 @@ CREATE TABLE Factura(
     id_vendedor INT NOT NULL,
     fecha_factura DATE NOT NULL,
 
-    FOREIGN KEY(id_cliente) REFERENCE Cliente(id_cliente),
-    FOREIGN KEY(id_vendedor) REFERENCE Vendedor(id_vendedor)
+    FOREIGN KEY(id_cliente) REFERENCES Cliente(id_cliente),
+    FOREIGN KEY(id_vendedor) REFERENCES Vendedor(id_vendedor)
 );
 
 CREATE TABLE Detalle(
@@ -38,8 +38,8 @@ CREATE TABLE Detalle(
     cantidad INT NOT NULL,
     sub_total INT NOT NULL,
 
-    FOREIGN KEY(id_factura) REFERENCE Factura(id_factura),
-    FOREIGN KEY(id_producto) REFERENCE Producto(id_producto)
+    FOREIGN KEY(id_factura) REFERENCES Factura(id_factura),
+    FOREIGN KEY(id_producto) REFERENCES Producto(id_producto)
 );
 
 /*
