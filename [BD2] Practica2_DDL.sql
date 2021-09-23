@@ -26,7 +26,6 @@ CREATE TABLE Factura(
     id_cliente INT NOT NULL,
     id_vendedor INT NOT NULL,
     fecha_factura DATE NOT NULL,
-
     FOREIGN KEY(id_cliente) REFERENCES Cliente(id_cliente),
     FOREIGN KEY(id_vendedor) REFERENCES Vendedor(id_vendedor)
 );
@@ -37,7 +36,6 @@ CREATE TABLE Detalle(
     id_producto INT NOT NULL,
     cantidad INT NOT NULL,
     sub_total NUMBER(6, 2) NOT NULL,
-
     FOREIGN KEY(id_factura) REFERENCES Factura(id_factura),
     FOREIGN KEY(id_producto) REFERENCES Producto(id_producto)
 );
@@ -77,6 +75,24 @@ SELECT * FROM (
     ORDER BY Veces_Vendidas DESC;
 ) WHERE ROWNUM <= 3;
 
+CREATE OR REPLACE VIEW consulta2 AS
+    SELECT * FROM (
+        SELECT
+            Producto.id_producto,
+            nombre_producto,
+            SUM(cantidad) AS Veces_Vendidas
+        FROM Producto
+            INNER JOIN Detalle Detalle
+                ON Detalle.id_producto = Producto.id_producto
+            INNER JOIN Factura FACTURA
+                ON Factura.id_factura = Detalle.id_factura
+        WHERE
+            Factura.fecha_factura >= TO_DATE('01/JAN/2020', 'dd/mon/yyyy') AND
+            Factura.fecha_factura <= TO_DATE('31/DEC/2020', 'dd/mon/yyyy')
+        GROUP BY Producto.id_producto, nombre_producto
+        ORDER BY Veces_Vendidas DESC
+    ) WHERE ROWNUM <= 3;
+
 /*
     TOP 5 DE LOS PRODUCTOS QUE MENOS SE HAN VENDIDO EN EL AÑO 2021
 */
@@ -96,6 +112,24 @@ SELECT * FROM (
     GROUP BY Producto.id_producto, nombre_producto
     ORDER BY Veces_Vendidas ASC
 ) WHERE ROWNUM <= 5;
+
+CREATE OR REPLACE VIEW consulta3 AS
+    SELECT * FROM (
+        SELECT
+            Producto.id_producto,
+            nombre_producto,
+            SUM(cantidad) AS Veces_Vendidas
+        FROM Producto
+            INNER JOIN Detalle
+                ON Detalle.id_producto = Producto.id_producto
+            INNER JOIN Factura
+                ON Factura.id_factura = Detalle.id_factura
+        WHERE
+            Factura.fecha_factura >= TO_DATE('01/JAN/2021', 'dd/mon/yyyy') AND
+            Factura.fecha_factura <= TO_DATE('31/DEC/2021', 'dd/mon/yyyy')
+        GROUP BY Producto.id_producto, nombre_producto
+        ORDER BY Veces_Vendidas ASC
+    ) WHERE ROWNUM <= 5;
 
 /*
     TOP 5 DE VENDEDORES QUE HAN ATENDIDO UNA MAYOR CANTIDAD DE CLIENTES
